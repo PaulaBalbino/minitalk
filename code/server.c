@@ -6,78 +6,77 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 11:50:02 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/08 17:49:59 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/09 13:06:30 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// PARAMOS NA CRIACAO DA FUNCAO SETBIT, PROVAVELMENTE SERA NECESSARIO CRIAR UM STRUCT
-// VER OUTROS CODIGOS 
-
 #include "minitalk.h"
 
-int g_count;
+t_data	g_info;
+
+void	reset_data()
+{
+	g_info.bit_index = 0;
+	g_info.letter = 0;
+	g_info.client_pid = 0;
+}
 
 // Quando o server enviar um dos sinais
-void	signal_handler(int signal)
+void	signal_handler(int signal, siginfo_t *info, void *ucontext)
 {
+	if (g_info.client_pid != info->si_pid)
+	reset_data();
 	if (signal == SIGUSR1)
 	{
-		ft_printf("\nSignal Intercepted: 1\n");
-		ft_setbit()
-		g_count++;
+		//ft_printf("\nSignal Intercepted: 1\n");
+		ft_setbit(&g_info.letter, g_info.bit_index);
+		g_info.bit_index++;
 	}
 
 	if (signal == SIGUSR2)
 	{
-		ft_printf("\nSignal Intercepted: 0\n");
-		g_count++;
+		//ft_printf("\nSignal Intercepted: 0\n");
+		//ft_setbit(&g_info.letter, g_info.bit_index);
+		g_info.bit_index++;
 	}
+	//printf("%d\n", g_info.bit_index);
+	if (g_info.bit_index == 8)
+	{
+		write (1, &g_info.letter, 1);
+		g_info.bit_index = 0;
+		g_info.letter = 0;
+	}
+	g_info.client_pid = info->si_pid;
 }
-
 
 // Funcao de registro
-void register_signal_one(void)
+
+void register_signal(void)
 {
-	// Declare the sigaction structure
 	struct sigaction	act;
 
-	// Set all of the structure's bits to 0 to avoid errors
-	// relating to uninitialized variables...
 	ft_bzero(&act, sizeof(act));
-	// Set the signal handler as the default action
-	act.sa_handler = &signal_handler;
-
-	// Apply the action in the structure to the
-	// SIGINT signal (ctrl-c)
+	act.sa_sigaction = &signal_handler;
+	act.sa_flags = SA_SIGINFO;
+	sigemptyset(&act.sa_mask);
+	sigaddset(&act.sa_mask, SIGUSR1);
+	sigaddset(&act.sa_mask, SIGUSR2);
 	sigaction(SIGUSR1, &act, NULL);
-}
-
-void register_signal_zero(void)
-{
-	struct sigaction	act;
-
-	ft_bzero(&act, sizeof(act));
-	act.sa_handler = &signal_handler;
-
 	sigaction(SIGUSR2, &act, NULL);
 }
 
-#include "minitalk.h"
-
 int main(void)
 {
-	pid_t PID;
+	pid_t pid;
 
-	g_count = 0;
-	PID = getpid();
-	ft_printf("%d", (int) PID);
-
-register_signal_one();
-register_signal_zero();
-
-while (1)
-{
-	sleep(1);
-}
+	reset_data();
+	pid = getpid();
+	ft_printf("%d", (int) pid);
+	register_signal();
+	while (1)
+		sleep(1);
 return (0);
 }
+
+/*para economizar linhar chamei a funcao reset_data no main, para iniciar
+as variaveis*/

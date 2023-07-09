@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 11:49:50 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/08 17:16:50 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/09 13:06:20 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int main(int ac, char **av)
 		{
 			ft_kill(pid, ft_getbit(av[2][i], bitcounter));
 			bitcounter++;
-			sleep(1);
+			usleep(500);
 		}
 		i++;
 	}

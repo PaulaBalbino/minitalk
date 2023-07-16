@@ -6,27 +6,35 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:37:36 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/09 14:05:58 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/16 19:52:03 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-inline void	ft_setbit(char *c, int index)
+void	ft_setbit(char *c, int index)
 {
 	*c = *c | (1 << index);
 }
 
-void	ft_bzero(void *b, size_t len)
+int	ft_getbit(char c, int bit)
 {
-	size_t	c;
+	int	b;
 
-	c = 0;
-	while (c < len)
+	b = (c >> bit) & 1;
+	return (b);
+}
+
+// o zero verifica a existencia do processo
+int	ft_check_serverpid(int pid_s)
+{
+	if (kill(pid_s, 0) < 0)
 	{
-		((unsigned char *)b)[c] = '\0';
-		c++;
+		ft_printf("\n\nIncorrect PID number, please check\n\n");
+		return (-1);
 	}
+	else
+		return (0);
 }
 
 int	ft_atoi(const char *str)

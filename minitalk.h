@@ -6,19 +6,20 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:30:28 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/15 15:34:43 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/16 20:05:46 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
-#include <signal.h>
-#include <stdio.h>
-#include <strings.h>
+#ifndef MINITALK_H
+# define MINITALK_H
 
-#define BUFFER 1048576
+# include "ft_printf.h"
+# include <unistd.h>
+# include <signal.h>
+# include <stdio.h>
+# include <strings.h>
+
+# define BUFFER 1048576
 
 typedef struct s_data
 {
@@ -26,13 +27,17 @@ typedef struct s_data
 	char	letter;
 	int		client_pid;
 	int		buf[BUFFER];
-	int		getindex;
-	int		addindex;
+	int		letterindex;
 }	t_data;
 
-void	print_options(void);
-int		ft_atoi(const char *str);
-void	ft_bzero(void *b, size_t len);
+int		ft_getbit(char c, int bit);
 void	ft_setbit(char *c, int index);
+int		ft_check_serverpid(int pid_s);
+int		ft_atoi(const char *str);
+void	register_signal(struct sigaction *act,
+			void (*signal_handler)(int, siginfo_t *, void *));
+void	configure_signal(struct sigaction *signal);
+
+#endif
 
 /* char letter = 8 bits = 1 byte, armazena apenas uma letra */

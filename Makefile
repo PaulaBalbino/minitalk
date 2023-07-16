@@ -6,7 +6,7 @@
 #    By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/08 11:49:56 by pbalbino          #+#    #+#              #
-#    Updated: 2023/07/15 16:11:15 by pbalbino         ###   ########.fr        #
+#    Updated: 2023/07/16 19:59:25 by pbalbino         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ LIBRARIES = -L./ft_printf
 
 SERVER = server
 SERVER_SRC = server.c \
-			utils.c
+			utils.c \
+			config.c
 
 CLIENT = client
 CLIENT_SRC = client.c \

@@ -6,60 +6,45 @@
 #    By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/08 11:49:56 by pbalbino          #+#    #+#              #
-#    Updated: 2023/07/08 16:00:22 by pbalbino         ###   ########.fr        #
+#    Updated: 2023/07/15 16:11:15 by pbalbino         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME_SERVER = server
-NAME_CLIENT = client
+C_FLAGS = -Wall -Wextra -Werror
+PRINTF = ./ft_printf/libftprintf.a
+FT_PRINTF = -l ftprintf
+INCLUDES = -I./ft_printf
+LIBRARIES = -L./ft_printf
 
-CC		= gcc
-CFLAGS	= -Werror -Wextra -Wall
 
-PRINTF_PATH	= ft_printf/
-PRINTF_NAME	= libftprintf.a
-PRINTF		= $(PRINTF_PATH)$(PRINTF_NAME)
+SERVER = server
+SERVER_SRC = server.c \
+			utils.c
 
-INC			= 	-I ./ft_printf/ \
-				-I ./code/
+CLIENT = client
+CLIENT_SRC = client.c \
+			utils.c
 
-SRC_PATH	=	code/
-SRC			=	client.c \
-				message.c \
-				utils.c
-				
-SRCS		= $(addprefix $(SRC_PATH), $(SRC))
+all : $(SERVER) $(CLIENT)
 
-OBJ_PATH	= obj/
-OBJ			= $(SRC:.c=.o)
-OBJS		= $(addprefix $(OBJ_PATH), $(OBJ))
+$(SERVER) : $(PRINTF)
+	cc $(C_FLAGS) $(SERVER_SRC) $(INCLUDES) $(LIBRARIES) $(FT_PRINTF) -o $(SERVER)
 
-all: $(PRINTF) $(NAME_CLIENT)
+$(CLIENT) : $(PRINTF)
+	cc $(C_FLAGS) $(CLIENT_SRC) $(INCLUDES) $(LIBRARIES) $(FT_PRINTF) -o $(CLIENT)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@$(CC) $(CFLAGS) -c $< -o $@ $(INC)
-
-$(OBJS): $(OBJ_PATH)
-
-$(OBJ_PATH):
-	@mkdir $(OBJ_PATH)
 
 $(PRINTF):
-	@make -sC $(PRINTF_PATH)
-
-$(NAME_CLIENT): $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME_CLIENT) $(OBJS) $(PRINTF) $(INC)
-
-bonus: all
+	make -sC ft_printf
 
 clean:
-	@rm -rf $(OBJ_PATH)
-	@make clean -C $(PRINTF_PATH)
+	make clean -sC ft_printf
+	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	@rm -f $(NAME_CLIENT)
-	@rm -f $(PRINTF_PATH)$(PRINTF_NAME)
+	make fclean -sC ft_printf
+	rm -rf $(SERVER) $(CLIENT)
 
 re: fclean all
 
-.PHONY: all re clean fclean
+.PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:37:36 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/16 19:52:03 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:34:08 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	ft_getbit(char c, int bit)
 	return (b);
 }
 
-// o zero verifica a existencia do processo
 int	ft_check_serverpid(int pid_s)
 {
 	if (kill(pid_s, 0) < 0)
@@ -60,3 +59,14 @@ int	ft_atoi(const char *str)
 	}
 	return (result * sign);
 }
+
+/*
+(kill(pid_s, 0) < 0) >> verifica se o PID eh valido
+
+The kill() function sends the signal specified by sig to pid, a process
+or a group of processes.  Typically, Sig will be one of the signals
+specified in sigaction(2).  A value of 0, however, will cause error checking
+to be performed (with no signal being sent). This can be used to check the
+validity of pid.
+
+*/

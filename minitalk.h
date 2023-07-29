@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:30:28 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/16 20:05:46 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:41:10 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ int		ft_getbit(char c, int bit);
 void	ft_setbit(char *c, int index);
 int		ft_check_serverpid(int pid_s);
 int		ft_atoi(const char *str);
-void	register_signal(struct sigaction *act,
-			void (*signal_handler)(int, siginfo_t *, void *));
 void	configure_signal(struct sigaction *signal);
 
 #endif

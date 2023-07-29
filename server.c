@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 11:50:02 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/16 19:59:56 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/29 23:00:11 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	print_message(void)
 	int	i;
 
 	i = 0;
-	while (i < g_info.letterindex || g_info.buf[i] != 0)
+	while (i < g_info.letterindex && g_info.buf[i] != 0)
 	{
 		write (1, &g_info.buf[i], 1);
 		i++;
@@ -54,18 +54,43 @@ void	process_bit(int bit)
 	g_info.letter <<= 1;
 }
 
-// Quando o server enviar um dos sinais
+/*
+
+buffer eh um grande vetor de chars.
+
+*/
+
 static void	signal_handler(int signal, siginfo_t *info, void *context)
 {
 	usleep(100);
 	(void) context;
-	(void) info;
-	if (info->si_pid != 0)
+	if (info->si_pid > 0)
 		g_info.client_pid = info->si_pid;
-	if (signal == SIGUSR1 || signal == SIGUSR2)
-		process_bit (signal == SIGUSR1);
+	if (signal == SIGUSR1)
+		process_bit (1);
+	else if (signal == SIGUSR2)
+		process_bit (0);
 	kill (g_info.client_pid, SIGUSR1);
 }
+
+/*
+usleep - suspend execution for microsecond intervals (neste caso,
+100 microseconds) minimo necessario para tratar um sinal e avisar
+o client que o sinal foi tratado (equivalente do ack).
+
+context: nao eh utilizado; (void) silencia o erro: unused parameter
+'context'.
+
+info->si_pid: eh o PID do client, salva esse valor em client_pid para
+distinguir os clients (sobrescreve o valor) e enviar o ack do recebimento.
+
+process_bit (signal == SIGUSR1):
+
+kill sera enviado pelo server para o client avisando que o bit chegou,
+para que o proximo seja enviado.
+
+
+*/
 
 int	main(void)
 {
@@ -84,5 +109,50 @@ int	main(void)
 	return (0);
 }
 
-/*para economizar linhar chamei a funcao reset_data no main, para iniciar
-as variaveis*/
+/*
+main: eh basicamente a configuracao como o sinal deve ser tratado e qual sinal.
+
+getpid eh uma funcao do sistema
+
+sigemptyset: The sigemptyset() function initialises the signal e zera os sinIS
+
+The sigaction structure is defined as something like:
+
+           struct sigaction {
+               1 - void     (*sa_handler)(int);
+               2 - void     (*sa_sigaction)(int, siginfo_t *, void *);
+               sigset_t   sa_mask;
+               int        sa_flags;
+               void     (*sa_restorer)(void);
+           };
+
+
+sa_flags: define comportamento, behaviour. Define se ira chamar a funcao 1 ou 2
+(usando o flag usa a 2 por default).
+
+sa_mask: define quais sinais serao tratados pela funcao (no caso: SIGUSR1 E 2);
+
+obs: essa estrutura esta no .h do sistema.
+
+s_server.sa_sigaction = signal_handler  >> sa_sigaction eh um ponteiro que
+precisa ser configurado para apontar para a ft que ira tratar os sinais recebidos
+do client (obs: segue o prototipo da funcao 2 da struct)
+
+SA_SIGINFO: eh uma flag que o sistema deve chamar a ft 2 e nao a 1.
+
+**** SA_RESTART:
+
+configure_signal(&s_server); define quais sinais devem ser tratados pela funcao.
+
+while eh infinito, ate receber um sinal (tira o pause). Na sequencia ele pausa
+novamente. vide man pause: pause – stop until signal
+DESCRIPTION
+     Pause is made obsolete by sigsuspend(2).
+
+     The pause() function causes the calling thread to pause until a signal is
+     received from either the kill(2) function or an interval timer.  (See
+     setitimer(2).) Upon termination of a signal handler started during a
+     pause(), the pause() call will return.
+
+	 neste caso eh uma thread unica
+*/

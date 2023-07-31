@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 11:50:02 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/29 23:00:11 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/30 19:15:43 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_data	g_info;
 
-void	reset_data(void)
+void	configure_signal(struct sigaction *signal)
 {
-	g_info.bit_index = 0;
-	g_info.letter = 0;
-	g_info.client_pid = 0;
-	g_info.letterindex = 0;
+	if (sigaction(SIGUSR1, signal, NULL) < 0)
+		ft_printf("\nERROR - SIGUSR1 failed \n");
+	if (sigaction(SIGUSR2, signal, NULL) < 0)
+		ft_printf("\nERROR - SIGUSR2 failed \n");
 }
 
 void	print_message(void)
@@ -97,7 +97,10 @@ int	main(void)
 	struct sigaction	s_server;
 	pid_t				pid;
 
-	reset_data();
+	g_info.bit_index = 0;
+	g_info.letter = 0;
+	g_info.client_pid = 0;
+	g_info.letterindex = 0;
 	pid = getpid();
 	ft_printf("My PID is %d\n", (int) pid);
 	sigemptyset(&s_server.sa_mask);
@@ -121,7 +124,7 @@ The sigaction structure is defined as something like:
            struct sigaction {
                1 - void     (*sa_handler)(int);
                2 - void     (*sa_sigaction)(int, siginfo_t *, void *);
-               sigset_t   sa_mask;
+               sigset_t   sa_mask; (nao eh usado diretamente, a ft sigaction preenche o mask)
                int        sa_flags;
                void     (*sa_restorer)(void);
            };

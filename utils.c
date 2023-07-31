@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:37:36 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/29 22:34:08 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/30 09:58:03 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_getbit(char c, int bit)
 
 int	ft_check_serverpid(int pid_s)
 {
-	if (kill(pid_s, 0) < 0)
+	if (kill(pid_s, 0) < 0 || pid_s <= 0)
 	{
 		ft_printf("\n\nIncorrect PID number, please check\n\n");
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: pbalbino <pbalbino@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 11:49:50 by pbalbino          #+#    #+#             */
-/*   Updated: 2023/07/29 22:57:39 by pbalbino         ###   ########.fr       */
+/*   Updated: 2023/07/30 09:46:32 by pbalbino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(int ac, char **av)
 	i = 0;
 	if (ac != 3)
 	{
-		ft_printf("Check the number of parameters");
+		ft_printf("\n\nCheck the number of parameters\n\n");
 		return (0);
 	}
 	pid_s = ft_atoi(av[1]);
